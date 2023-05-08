@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Сайт программиста Куприяка</title>
+  <style>
+    html {
+      font-size: 16px;
+      /* задайте желаемый размер базового шрифта */
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    canvas {
+      background-color: #0077be;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="myCanvas"></canvas>
+
+  <script>
+    let canvas = document.getElementById("myCanvas");
+    let ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      draw();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+
+    let colors = [
+      "#7cc14a",
+      "#89cb56",
+      "#96d163",
+      "#a3d76f",
+      "#b0dd7b",
+    ];
+
+    function randomColor() {
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function drawTriangle(x, y, size, angle) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.translate(x + size / 2, y + size / 2);
+      ctx.rotate(angle * Math.PI / 180);
+      ctx.moveTo(-size / 2, -size / 2);
+      ctx.lineTo(-size / 2, size / 2);
+      ctx.lineTo(size / 2, size / 2);
+      ctx.closePath();
+      ctx.fillStyle = randomColor();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    let link = "https://vk.com/koopriyaka";
+    let linkText = "Перейти на страницу ВК";
+    let handleMouseMove = function (event) {
+    };
+    let handleMouseUp = function (event) {
+    };
+
+    let grayColors = ["hsl(0, 0%, 45%)", "hsl(0, 0%, 65%)", "hsl(0, 0%, 80%)"];
+let lightBlueColors = ["hsl(195, 53%, 82%)", "hsl(214, 30%, 80%)", "hsl(180, 88%, 90%)"];
+
+    function draw() {
+      const minSize = 70;
+      const maxSize = 200;
+      const minRectSize = 25;
+      const maxRectSize = 100;
+      const margin = canvas.height/10;
+
+      let x = margin;
+      let y = margin;
+      let isMouseInTheWindow = false;
+      let lowBorderY = canvas.height - margin * 3;
+      let otherBorder = margin * 3;
+      let rightBorderX = canvas.width - margin * 3;
+
+      while (y < canvas.height - margin * 2) {
+        while (x < canvas.width - margin * 2) {
+          // draw a rectangle with random size and color
+
+          if ((y < lowBorderY) && (x < rightBorderX) && (x > otherBorder) && (y> otherBorder)) {
+            let rectSize = Math.random() * (maxRectSize - minRectSize) + minRectSize;
+            let rectX = x + rectSize / 2;
+            let rectY = y + rectSize / 2;
+            let rectWidth = Math.random() * (rectSize / 2) + minRectSize;
+            let rectHeight = Math.random() * (rectSize * 2) + minRectSize;
+            let fillColor;
+            if (Math.random() <= 0.5) {
+              fillColor = grayColors[Math.floor(Math.random() * grayColors.length)];
+            } else {
+              fillColor = lightBlueColors[Math.floor(Math.random() * lightBlueColors.length)];
+            }
+            ctx.fillStyle = fillColor;
+            ctx.fillRect(rectX - rectWidth / 2, rectY - rectHeight / 2, rectWidth, rectHeight);
+          }
+          let size = Math.random() * (maxSize - minSize) + minSize;
+          let angle = Math.random() * 360;
+          drawTriangle(x, y, size, angle);
+          x += minSize / 2;
+        }
+        x = margin;
+        y += minSize / 2;
+      }
+
+
+      ctx.fillStyle = "#0B2F27";
+      ctx.font = "calc(5vw + 5vh) Arial Black";
+      ctx.textAlign = "center";
+      ctx.lineWidth = 5;
+      ctx.fillText("Куприяка", canvas.width / 2, canvas.height / 2 - 100);
+
+      ctx.fillStyle = "white";
+      ctx.font = "calc(3vw + 3vh) Arial Black";
+      ctx.textAlign = "center";
+      ctx.lineWidth = Math.max(canvas.width, canvas.height) / 500;
+      ctx.strokeStyle = "black";
+      ctx.fillText("Программист на java, python, javascript", canvas.width / 2, canvas.height / 2);
+      ctx.strokeText("Программист на java, python, javascript", canvas.width / 2, canvas.height / 2);
+
+      let textColor = "black";
+      let rectColor = "#66c2ff"; // бледный цвет голубой
+      let textSize = 2; // em
+      // Задает параметры для текста ссылки и рисует текст на canvas.
+
+      let textWidth = ctx.measureText(linkText).width;
+      let rectHeight = textSize * 1.5 * 20; // em to px (2 * 10px per line height)
+      let rectWidth = textWidth + 10; // add some padding
+
+      let rectX = canvas.width / 2 - rectWidth / 2;
+      let rectY = canvas.height / 2 + 125 - rectHeight; // change y-position
+
+      ctx.fillStyle = rectColor;
+      ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+
+      // Рисует прямоугольник под текстом ссылки с заданными параметрами.
+
+      function drawLinkBox() {
+        ctx.fillStyle = rectColor;
+        ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+        canvas.style.cursor = "default";
+        ctx.fillStyle = textColor;
+        ctx.font = textSize + "rem Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(linkText, canvas.width / 2, canvas.height / 2 + 100);
+      }
+
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      handleMouseMove = function (event) {
+        isMouseInTheWindow = true;
+        let x = event.clientX;
+        let y = event.clientY;
+        if (x >= rectX && x <= rectX + rectWidth && y >= rectY && y <= rectY + rectHeight) {
+          ctx.fillStyle = "white";
+          ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+          canvas.style.cursor = "pointer";
+          ctx.fillStyle = textColor;
+          ctx.font = textSize + "rem Arial";
+          ctx.textAlign = "center";
+          ctx.fillText(linkText, canvas.width / 2, canvas.height / 2 + 100);
+        } else {
+          drawLinkBox()
+        }
+      };
+      canvas.addEventListener('mousemove', handleMouseMove);
+
+      if (!isMouseInTheWindow) {
+        drawLinkBox();
+      }
+      isMouseInTheWindow = false;
+
+      // Проверяет, находится ли курсор мыши над ссылкой, и меняет цвет прямоугольника и курсор, если это так.
+      canvas.removeEventListener('mouseup', handleMouseUp);
+      handleMouseUp = function (event) {
+        let x = event.clientX;
+        let y = event.clientY;
+        if (x >= rectX && x <= rectX + rectWidth && y >= rectY && y <= rectY + rectHeight) {
+          window.open(link, "_blank"); // open link in new tab
+        }
+      }
+      canvas.addEventListener('mouseup', handleMouseUp);
+
+    }
+
+    draw();
+
+
+
+
+// Устанавливает цвет прямоугольника и курсор по умолчанию, когда курсор мыши уходит с текста ссылки.
+
+  </script>
+</body>
+
+</html>
